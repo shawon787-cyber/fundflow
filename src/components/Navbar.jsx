@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Container from "@/components/Container";
 
 import {
 Menu,
@@ -33,8 +34,9 @@ return (
 <header className="sticky top-0 z-50 w-full border-b border-slate-200/70 bg-white/90 backdrop-blur-xl">
 <nav
 aria-label="Main navigation"
-className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-10"
+className="h-[76px]"
 >
+<Container className="flex h-full items-center justify-between">
 {/* Brand logo */}
 <Link
 href="/"
@@ -117,6 +119,7 @@ aria-label="FundFlow home"
     >
       {mobileMenuOpen ? <X size={21} /> : <Menu size={21} />}
     </button>
+  </Container>
   </nav>
 
   {/* Mobile navigation */}
@@ -131,7 +134,7 @@ aria-label="FundFlow home"
     inert={!mobileMenuOpen}
   >
     <div className="overflow-hidden">
-      <div className="space-y-1 px-5 py-4 sm:px-8">
+      <Container className="space-y-1 py-4">
         {navLinks.map((link) => {
           const active = isActive(link.href);
 
@@ -183,7 +186,7 @@ aria-label="FundFlow home"
             Join as Developer
           </Link>
         </div>
-      </div>
+      </Container>
     </div>
   </div>
 </header>

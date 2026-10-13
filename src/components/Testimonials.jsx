@@ -1,15 +1,17 @@
 
 "use client";
 
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import Link from "next/link";
+import Container from "@/components/Container";
 import {
   ArrowLeft,
   ArrowRight,
   Quote,
   Star,
 } from "lucide-react";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, A11y } from "swiper/modules";
 
 import "swiper/css";
@@ -73,17 +75,88 @@ const testimonials = [
   },
 ];
 
+function TestimonialCard({ testimonial }) {
+  return (
+    <article className="group flex h-full min-h-[350px] flex-col rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-sky-200 hover:shadow-xl hover:shadow-sky-100/50 sm:p-7">
+      <div className="flex items-start justify-between">
+        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-100 to-emerald-100 text-sky-700">
+          <Quote size={23} />
+        </div>
+
+        <div
+          className="flex items-center gap-1 rounded-full bg-amber-50 px-3 py-1.5"
+          aria-label={`${testimonial.rating} out of 5 stars`}
+        >
+          {Array.from({ length: testimonial.rating }, (_, index) => (
+            <Star
+              key={index}
+              size={14}
+              className="fill-amber-400 text-amber-400"
+            />
+          ))}
+        </div>
+      </div>
+
+      <p className="mt-7 flex-1 text-[15px] leading-7 text-slate-600">
+        “{testimonial.quote}”
+      </p>
+
+      <div className="mt-6 rounded-2xl border border-slate-100 bg-gradient-to-r from-sky-50/80 to-emerald-50/70 p-4">
+        <p className="text-xs font-medium uppercase tracking-wider text-slate-500">
+          Campaign
+        </p>
+        <p className="mt-1 font-semibold text-slate-800">
+          {testimonial.campaign}
+        </p>
+        <p className="mt-2 text-sm text-slate-600">
+          Fundraising goal progress:{" "}
+          <span className="font-bold text-emerald-700">
+            {testimonial.amount}
+          </span>
+        </p>
+      </div>
+
+      <div className="mt-6 flex items-center gap-3">
+        <div
+          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-bold ${testimonial.avatarColor}`}
+        >
+          {testimonial.initials}
+        </div>
+
+        <div className="min-w-0">
+          <h3 className="truncate font-bold text-slate-900">
+            {testimonial.name}
+          </h3>
+          <p className="mt-1 text-sm text-slate-500">{testimonial.role}</p>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+const SwiperCarousel = dynamic(
+  () => import("swiper/react").then((module) => module.Swiper),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="mx-auto max-w-xl">
+        <TestimonialCard testimonial={testimonials[0]} />
+      </div>
+    ),
+  }
+);
+
 export default function Testimonials() {
   const [swiperInstance, setSwiperInstance] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-white via-sky-50/40 to-white px-4 pb-20 sm:px-6 lg:px-8 lg:pb-28">
+    <section className="relative overflow-hidden bg-gradient-to-b from-white via-sky-50/40 to-white py-12">
       {/* Decorative background */}
       <div className="pointer-events-none absolute -left-32 top-20 h-72 w-72 rounded-full bg-sky-100/60 blur-3xl" />
       <div className="pointer-events-none absolute -right-32 bottom-0 h-80 w-80 rounded-full bg-emerald-100/50 blur-3xl" />
 
-      <div className="relative mx-auto max-w-7xl">
+      <Container className="relative">
         {/* Heading */}
         <div className="mx-auto mb-14 max-w-2xl text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700">
@@ -106,7 +179,7 @@ export default function Testimonials() {
 
         {/* Slider */}
         <div className="relative">
-          <Swiper
+          <SwiperCarousel
             modules={[Autoplay, Pagination, A11y]}
             onSwiper={setSwiperInstance}
             onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
@@ -136,85 +209,22 @@ export default function Testimonials() {
           >
             {testimonials.map((testimonial) => (
               <SwiperSlide key={testimonial.name} className="!h-auto">
-                <article className="group flex h-full min-h-[350px] flex-col rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-sky-200 hover:shadow-xl hover:shadow-sky-100/50 sm:p-7">
-                  {/* Quote and rating */}
-                  <div className="flex items-start justify-between">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-100 to-emerald-100 text-sky-700">
-                      <Quote size={23} />
-                    </div>
-
-                    <div
-                      className="flex items-center gap-1 rounded-full bg-amber-50 px-3 py-1.5"
-                      aria-label={`${testimonial.rating} out of 5 stars`}
-                    >
-                      {Array.from(
-                        { length: testimonial.rating },
-                        (_, index) => (
-                          <Star
-                            key={index}
-                            size={14}
-                            className="fill-amber-400 text-amber-400"
-                          />
-                        )
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Testimonial text */}
-                  <p className="mt-7 flex-1 text-[15px] leading-7 text-slate-600">
-                    “{testimonial.quote}”
-                  </p>
-
-                  {/* Campaign information */}
-                  <div className="mt-6 rounded-2xl border border-slate-100 bg-gradient-to-r from-sky-50/80 to-emerald-50/70 p-4">
-                    <p className="text-xs font-medium uppercase tracking-wider text-slate-500">
-                      Campaign
-                    </p>
-                    <p className="mt-1 font-semibold text-slate-800">
-                      {testimonial.campaign}
-                    </p>
-                    <p className="mt-2 text-sm text-slate-600">
-                      Fundraising goal progress:{" "}
-                      <span className="font-bold text-emerald-700">
-                        {testimonial.amount}
-                      </span>
-                    </p>
-                  </div>
-
-                  {/* Author */}
-                  <div className="mt-6 flex items-center gap-3">
-                    <div
-                      className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-bold ${testimonial.avatarColor}`}
-                    >
-                      {testimonial.initials}
-                    </div>
-
-                    <div className="min-w-0">
-                      <h3 className="truncate font-bold text-slate-900">
-                        {testimonial.name}
-                      </h3>
-                      <p className="mt-1 text-sm text-slate-500">
-                        {testimonial.role}
-                      </p>
-                    </div>
-                  </div>
-                </article>
+                <TestimonialCard testimonial={testimonial} />
               </SwiperSlide>
             ))}
-          </Swiper>
+          </SwiperCarousel>
         </div>
 
-       
-        
 {/* Slider controls and pagination */}
-<div className="mt-8 flex w-full flex-row flex-wrap items-center justify-around gap-4 sm:gap-6">
+<div className="mt-8 flex flex-wrap items-center justify-center gap-5  sm:gap-6">
+
   {/* Navigation buttons */}
-  <div className="flex shrink-0 items-center gap-3">
+  {/* <div className="flex shrink-0 items-center gap-3">
     <button
       type="button"
       onClick={() => swiperInstance?.slidePrev()}
       aria-label="Previous testimonials"
-      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition hover:border-sky-300 hover:bg-sky-50 hover:text-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-300"
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-sky-300 hover:bg-sky-50 hover:text-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-300"
     >
       <ArrowLeft size={18} />
     </button>
@@ -223,45 +233,37 @@ export default function Testimonials() {
       type="button"
       onClick={() => swiperInstance?.slideNext()}
       aria-label="Next testimonials"
-      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300"
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300"
     >
       <ArrowRight size={18} />
     </button>
+  </div> */}
+
+  {/* Modern pill pagination */}
+  <div className="flex items-center justify-center rounded-full border border-slate-100 bg-slate-50/80 px-4 py-3 shadow-sm">
+    <div
+      className="fundora-testimonial-pagination flex min-h-2 items-center justify-center gap-2"
+      aria-label={`Testimonial slide ${activeIndex + 1}`}
+    />
   </div>
 
-  {/* Pagination dots */}
-  <div
-    className="fundora-testimonial-pagination flex min-h-5 shrink-0 items-center justify-center gap-2"
-    aria-label={`Testimonial slide ${activeIndex + 1}`}
-  />
-
   {/* Slide counter */}
-  <span className="shrink-0 whitespace-nowrap text-sm font-medium tabular-nums text-slate-500">
-    {String(activeIndex + 1).padStart(2, "0")} / {String(testimonials.length).padStart(2, "0")}
-  </span>
+  {/* <div className="flex shrink-0 items-center gap-1.5 rounded-full border border-slate-100 bg-white px-3.5 py-2.5 shadow-sm">
+    <span className="text-sm font-bold tabular-nums text-slate-900">
+      {String(activeIndex + 1).padStart(2, "0")}
+    </span>
+    <span className="text-xs text-slate-300">/</span>
+    <span className="text-sm font-medium tabular-nums text-slate-400">
+      {String(testimonials.length).padStart(2, "0")}
+    </span>
+  </div> */}
+
 </div>
 
-        
-      </div>
 
-      {/* Custom pagination styling */}
-      <style jsx global>{`
-        .fundora-testimonial-pagination .swiper-pagination-bullet {
-          width: 9px;
-          height: 9px;
-          margin: 0 !important;
-          opacity: 1;
-          background: #cbd5e1;
-          transition: all 0.3s ease;
-          cursor: pointer;
-        }
 
-        .fundora-testimonial-pagination .swiper-pagination-bullet-active {
-          width: 26px;
-          border-radius: 999px;
-          background: linear-gradient(to right, #0284c7, #10b981);
-        }
-      `}</style>
+      </Container>
+
     </section>
   );
 }

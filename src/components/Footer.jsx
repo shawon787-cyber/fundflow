@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { connection } from "next/server";
+import Container from "@/components/Container";
 import {
   HeartHandshake,
   ArrowUpRight,
@@ -21,11 +22,7 @@ const footerLinks = {
     { name: "Contact Us", href: "/contact" },
     { name: "FAQs", href: "/faq" },
   ],
-  Resources: [
-    { name: "Help Center", href: "/help" },
-    { name: "Privacy Policy", href: "/privacy" },
-    { name: "Terms of Service", href: "/terms" },
-  ],
+  
 };
 
 const socialLinks = [
@@ -81,11 +78,11 @@ export default function Footer() {
       <div className="pointer-events-none absolute -left-32 top-0 h-64 w-64 rounded-full bg-sky-100/60 blur-3xl" />
       <div className="pointer-events-none absolute -right-32 bottom-0 h-72 w-72 rounded-full bg-emerald-100/50 blur-3xl" />
 
-      <div className="relative mx-auto max-w-7xl px-5 pt-14 sm:px-8 sm:pt-16 lg:px-10">
+      <Container className="relative pt-14 sm:pt-16">
         {/* Main footer content */}
         <div className="grid grid-cols-1 gap-10 pb-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           {/* Brand and description */}
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-3">
             <Link
               href="/"
               aria-label="Fundora home"
@@ -96,7 +93,7 @@ export default function Footer() {
               </span>
 
               <span className="text-2xl font-extrabold tracking-tight text-slate-900">
-                fund
+                Fund
                 <span className="bg-gradient-to-r from-sky-500 to-emerald-500 bg-clip-text text-transparent">
                   ora
                 </span>
@@ -108,30 +105,12 @@ export default function Footer() {
               supporters together to turn meaningful ideas into reality.
             </p>
 
-            {/* Contact information */}
-            <div className="mt-6 space-y-3">
-              <a
-                href="mailto:support@fundora.example"
-                className="group flex w-fit items-center gap-3 text-sm text-slate-600 transition-colors hover:text-emerald-600"
-              >
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-50 text-sky-600 transition-colors group-hover:bg-emerald-50 group-hover:text-emerald-600">
-                  <Mail size={17} />
-                </span>
-                support@fundora.example
-              </a>
-
-              <div className="flex items-center gap-3 text-sm text-slate-600">
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-                  <MapPin size={17} />
-                </span>
-                Building a community without borders
-              </div>
-            </div>
+            
           </div>
 
           {/* Navigation link columns */}
           {Object.entries(footerLinks).map(([title, links]) => (
-            <div key={title} className="lg:col-span-2">
+            <div key={title} className="lg:col-span-3">
               <h3 className="mb-5 text-sm font-bold text-slate-900">
                 {title}
               </h3>
@@ -156,7 +135,7 @@ export default function Footer() {
           ))}
 
           {/* Community and social links */}
-          <div className="sm:col-span-2 lg:col-span-2">
+          <div className="sm:col-span-2 lg:col-span-3">
             <h3 className="mb-4 text-sm font-bold text-slate-900">
               Join our community
             </h3>
@@ -179,51 +158,45 @@ export default function Footer() {
                 </a>
               ))}
             </div>
-          </div>
-        </div>
+            {/* Contact information */}
+            <div className="mt-6 space-y-3">
+              <a
+                href="mailto:support@fundora.example"
+                className="group flex w-fit items-center gap-3 text-sm text-slate-600 transition-colors hover:text-emerald-600"
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-50 text-sky-600 transition-colors group-hover:bg-emerald-50 group-hover:text-emerald-600">
+                  <Mail size={17} />
+                </span>
+                support@fundora.example
+              </a>
 
-        {/* Gradient CTA banner */}
-        <div className="relative mb-10 overflow-hidden rounded-2xl bg-gradient-to-r from-sky-500 via-blue-500 to-emerald-500 px-6 py-8 sm:px-9 sm:py-9">
-          <div className="pointer-events-none absolute -right-8 -top-20 h-48 w-48 rounded-full border border-white/20" />
-          <div className="pointer-events-none absolute -right-2 -top-14 h-32 w-32 rounded-full border border-white/20" />
-
-          <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h3 className="text-xl font-bold text-white sm:text-2xl">
-                Have an idea worth sharing?
-              </h3>
-              <p className="mt-2 max-w-xl text-sm leading-6 text-white/85">
-                Take the first step. Create a campaign and invite your
-                community to be part of something meaningful.
-              </p>
+              
             </div>
-
-            <Link
-              href="/campaigns/create"
-              className="inline-flex shrink-0 items-center justify-center gap-2 self-start rounded-xl bg-white px-5 py-3 text-sm font-bold text-slate-900 shadow-md transition duration-300 hover:-translate-y-0.5 hover:shadow-lg sm:self-center"
-            >
-              Start a Campaign
-              <ArrowUpRight size={17} />
-            </Link>
           </div>
         </div>
+
+        
 
         {/* Bottom bar */}
         <div className="flex flex-col gap-4 border-t border-slate-200/80 py-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-center text-sm text-slate-500 sm:text-left">
+          <div>
+            <p className="text-center text-sm text-slate-500 sm:text-left">
             ©{" "}
             <Suspense fallback={null}>
               <CurrentYear />
             </Suspense>{" "}
             Fundora. All rights reserved.
           </p>
+          </div>
 
-          <p className="flex items-center justify-center gap-1.5 text-sm text-slate-500 sm:justify-end">
-            Built for people who believe in ideas
-            <Heart size={14} className="fill-rose-400 text-rose-400" />
-          </p>
+          <div className="flex items-center gap-3 text-sm text-slate-600">
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
+                  <MapPin size={17} />
+                </span>
+                Building a community without borders
+              </div>
         </div>
-      </div>
+      </Container>
     </footer>
   );
 }
